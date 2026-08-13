@@ -146,8 +146,8 @@ struct IpcControlCmd {
 
 /// 0x201: 速度命令 (10ms)
 struct IpcMotionCmd {
-    int16_t linearSpeed   = 0;       // 质心线速度 (m/s), ×0.001, sint16
-    int16_t angularSpeed  = 0;       // 质心角速度 (rad/s), ×0.001, sint16
+    int16_t linearSpeed   = 1000;    // 物理线速度 ×1000；默认 1 m/s，编码时叠加 -5 偏移
+    int16_t angularSpeed  = 0;       // 物理角速度 ×1000；编码时叠加 -5 偏移
     uint8_t heartbeat     = 0;       // 工控机心跳计数
 };
 

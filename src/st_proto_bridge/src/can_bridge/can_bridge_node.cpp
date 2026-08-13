@@ -187,7 +187,7 @@ void CanBridgeNode::sendCanFrame(uint32_t canId, const CanFrame& data) {
 
     struct can_frame frame;
     std::memset(&frame, 0, sizeof(frame));
-    frame.can_id  = canId | CAN_EFF_FLAG;  // 29位扩展帧
+    frame.can_id  = canId;  // 29位标准帧
     frame.can_dlc = static_cast<uint8_t>(data.size());
     std::copy(data.begin(), data.end(), frame.data);
 
@@ -619,8 +619,8 @@ void CanBridgeNode::sendMotionFrame(const ros::TimerEvent&) {
     IpcMotionCmd cmd;
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        cmd = currentMotionCmd_;
-        cmd.heartbeat++;  // 工控机心跳递增
+        currentMotionCmd_.heartbeat++;
+        cmd = currentMotionCmd_;  // 发送递增后的工控机心跳
     }
     CanFrame frame = CanCodec::encodeMotionCmd(cmd);
     sendCanFrame(0x201, frame);

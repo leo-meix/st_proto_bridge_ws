@@ -212,13 +212,17 @@ CanFrame CanCodec::encodeMotionCmd(const IpcMotionCmd& cmd) {
     CanFrame frame;
     frame.fill(0);
 
+    // 物理值 = raw * 0.001 - 5，因此 raw = 物理值 * 1000 + 5000。
+    // cmd 中的速度已经是物理值 * 1000。
+    constexpr int16_t kSpeedOffsetRaw = 5000;
+
     // Byte0-1: 质心线速度 (sint16, Intel 小端)
-    uint16_t linearRaw = static_cast<uint16_t>(cmd.linearSpeed);
+    uint16_t linearRaw = static_cast<uint16_t>(cmd.linearSpeed + kSpeedOffsetRaw);
     frame[0] = static_cast<uint8_t>(linearRaw & 0xFF);
     frame[1] = static_cast<uint8_t>((linearRaw >> 8) & 0xFF);
 
     // Byte2-3: 质心角速度 (sint16, Intel 小端)
-    uint16_t angularRaw = static_cast<uint16_t>(cmd.angularSpeed);
+    uint16_t angularRaw = static_cast<uint16_t>(cmd.angularSpeed + kSpeedOffsetRaw);
     frame[2] = static_cast<uint8_t>(angularRaw & 0xFF);
     frame[3] = static_cast<uint8_t>((angularRaw >> 8) & 0xFF);
 
