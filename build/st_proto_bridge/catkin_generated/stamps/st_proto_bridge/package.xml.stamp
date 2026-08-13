@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>st_proto_bridge</name>
+  <version>1.0.0</version>
+  <description>
+    山推机器人工控机物联网通信协议解析节点 (protocol_parsing_node)
+    负责机器人与云端服务器之间的TCP长连接通信，包括：
+    - 登录/心跳维护
+    - AES128加密JSON业务数据收发
+    - 机器人状态上报、故障告警、任务状态、局部路径等消息的路由分发
+  </description>
+
+  <license>Apache 2.0</license>
+
+  <maintainer email="dev@shantui.com">Shantui Robot Team</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+
+  <depend>nlohmann-json-dev</depend>
+  <depend>libboost-dev</depend>
+  <depend>libssl-dev</depend>
+
+  <export>
+  </export>
+</package>

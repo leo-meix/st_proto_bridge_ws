@@ -1,0 +1,25 @@
+# CAN 桥接节点 配置文件
+#
+# 该文件通过 launch 文件的 rosparam 方式加载到节点命名空间
+
+# SocketCAN 接口名
+can_interface: "vcan0"
+
+# CAN 波特率 (bps)
+can_bitrate: 500000
+
+# 上行 ROS 话题上报频率 (Hz)
+robot_status_hz: 1.0        # report 每秒1次 (需求: 1s周期)
+fault_check_hz: 1.0         # 故障检测每秒1次
+task_state_hz: 1.0          # 任务状态每秒1次
+
+# 行走速度默认值 (WALK ctrlCmd=5)
+# 当前云平台协议 V1.0.3 的 ctrlValue 仅承载方向(0=前进/1=后退/2=左转/3=右转)，
+# 不承载速度值，因此速度由本配置文件设定。后续协议升级可在 data 中新增
+# speed 字段由云平台实时下发，届时去掉此处默认值即可。
+walk_linear_speed: 1.0       # 前进/后退默认线速度 (m/s)
+walk_angular_speed: 0.5      # 左转/右转默认角速度 (rad/s)
+
+# VCU 通信超时 (ms) — 3倍帧周期
+vcu_motion_timeout_ms: 30   # 0x18FF5321 周期10ms, 3倍=30ms
+vcu_basic_timeout_ms: 300   # 0x18FF5021 周期100ms, 3倍=300ms

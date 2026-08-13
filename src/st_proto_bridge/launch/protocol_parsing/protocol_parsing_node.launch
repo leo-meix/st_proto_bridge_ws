@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- 协议解析节点 -->
+  <!-- 负责工控机与云平台服务器之间的TCP长连接通信，协议解析与数据路由 -->
+
+  <arg name="config_file" default="$(find st_proto_bridge)/config/protocol_parsing/protocol_parsing_node.yaml" />
+
+  <group ns="st_robot">
+    <node name="st_proto_bridge" pkg="st_proto_bridge" type="protocol_parsing_node" output="screen">
+      <rosparam file="$(arg config_file)" command="load" />
+    </node>
+  </group>
+
+</launch>

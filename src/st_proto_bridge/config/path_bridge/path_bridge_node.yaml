@@ -1,0 +1,10 @@
+# 路径桥接节点 配置文件
+
+# 输入话题：导航栈发布的路径
+input_path_topic: "/move_base/GlobalPlanner/plan"
+
+# 输出话题：转发到 protocol_parsing_node 订阅的话题
+output_path_topic: "/st_robot/local_path"
+
+# 路径变化判定阈值 (米)  — 任意关键点偏移超过此值判定为"路径变更"
+change_threshold: 0.5

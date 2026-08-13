@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- ======================================================= -->
+  <!--  st_proto_bridge 一键启动                                -->
+  <!--  启动全部 4 个 C++ 节点                                   -->
+  <!--                                                        -->
+  <!--  运行方式:                                               -->
+  <!--    roslaunch st_proto_bridge st_proto_bridge.launch      -->
+  <!--                                                        -->
+  <!--  或使用一键脚本 (自动创建 vcan0):                          -->
+  <!--    bash st_proto_bridge/scripts/start_all.sh             -->
+  <!-- ======================================================= -->
+
+  <!-- 子 launch 文件已自带 <group ns="st_robot">，此处不再嵌套 -->
+
+  <!-- 1. 协议解析节点 — TCP 长连接云平台 -->
+  <include file="$(find st_proto_bridge)/launch/protocol_parsing/protocol_parsing_node.launch" />
+
+  <!-- 2. CAN 桥接节点 — SocketCAN 信号解码 -->
+  <include file="$(find st_proto_bridge)/launch/can_bridge/can_bridge_node.launch" />
+
+  <!-- 3. 路径桥接节点 — 导航 Path 转发 -->
+  <include file="$(find st_proto_bridge)/launch/path_bridge/path_bridge_node.launch" />
+
+  <!-- 4. 充电口盖板控制节点 — Modbus TCP → LoRa 网关 -->
+  <include file="$(find st_proto_bridge)/launch/charger_cover/charger_cover_node.launch" />
+
+</launch>

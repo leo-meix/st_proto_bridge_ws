@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- CAN 桥接节点 -->
+  <!-- 负责工控机与 VCU 之间的 CAN 数据交互, 桥接 CAN 总线到 ROS 话题 -->
+
+  <arg name="config_file" default="$(find st_proto_bridge)/config/can_bridge/can_bridge_node.yaml" />
+
+  <group ns="st_robot">
+    <node name="st_can_bridge" pkg="st_proto_bridge" type="can_bridge_node" output="screen">
+      <rosparam file="$(arg config_file)" command="load" />
+    </node>
+  </group>
+
+</launch>

@@ -1,0 +1,28 @@
+# 充电口盖板控制节点 配置文件
+#
+# 该文件通过 launch 文件的 rosparam 方式加载到节点私有命名空间
+
+# LoRa 网关 Modbus TCP IP (⚠️ 部署时改为实际 IP)
+modbus_ip: "192.168.1.100"
+
+# Modbus TCP 端口 (标准 502)
+modbus_port: 502
+
+# Modbus 从站/单元 ID
+modbus_unit_id: 1
+
+# 线圈起始地址 (Q0.0 对应 0x0000)
+coil_start_address: 0
+
+# 线圈值: 开门 = Q0.0=1,Q0.1=0 → 0x01
+coil_open_value: 1
+
+# 线圈值: 关门 = Q0.0=0,Q0.1=1 → 0x02
+coil_close_value: 2
+
+# Modbus 请求超时 (毫秒)
+request_timeout_ms: 5000
+
+# 干跑模式: true=只打印日志, 不真正发 Modbus 请求 (L0 离线测试)
+# ⚠️ 部署时务必改为 false
+dry_run: true

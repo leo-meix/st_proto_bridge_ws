@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- 充电口盖板控制节点 -->
+  <!-- 通过 Modbus TCP (0x0F) 控制 LoRa 网关, 驱动盖板开合 -->
+
+  <arg name="config_file"
+       default="$(find st_proto_bridge)/config/charger_cover/charger_cover_node.yaml" />
+
+  <group ns="st_robot">
+    <node name="charger_cover" pkg="st_proto_bridge" type="charger_cover_node" output="screen">
+      <rosparam file="$(arg config_file)" command="load" />
+    </node>
+  </group>
+
+</launch>

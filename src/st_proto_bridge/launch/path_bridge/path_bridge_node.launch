@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- 路径桥接节点 -->
+  <!-- 接收导航栈的 nav_msgs::Path → 去重 → 转发到 /st_robot/local_path -->
+
+  <arg name="config_file" default="$(find st_proto_bridge)/config/path_bridge/path_bridge_node.yaml" />
+
+  <group ns="st_robot">
+    <node name="st_path_bridge" pkg="st_proto_bridge" type="path_bridge_node" output="screen">
+      <rosparam file="$(arg config_file)" command="load" />
+    </node>
+  </group>
+
+</launch>

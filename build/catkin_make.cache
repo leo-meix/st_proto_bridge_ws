@@ -1,0 +1,2 @@
+st_proto_bridge
+-DCATKIN_DEVEL_PREFIX=/home/shen/st_proto_bridge_ws/devel -DCMAKE_INSTALL_PREFIX=/home/shen/st_proto_bridge_ws/install -G Unix Makefiles
