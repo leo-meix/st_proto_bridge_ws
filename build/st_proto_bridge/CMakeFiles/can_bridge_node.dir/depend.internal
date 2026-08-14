@@ -8,6 +8,8 @@ st_proto_bridge/CMakeFiles/can_bridge_node.dir/src/can_bridge/can_bridge_node.cp
  /home/shen/st_proto_bridge_ws/src/st_proto_bridge/include/st_proto_bridge/json_helper.h
  /home/shen/st_proto_bridge_ws/src/st_proto_bridge/include/st_proto_bridge/types.h
  /home/shen/st_proto_bridge_ws/src/st_proto_bridge/src/can_bridge/can_bridge_node.cpp
+ /opt/ros/noetic/include/geometry_msgs/Twist.h
+ /opt/ros/noetic/include/geometry_msgs/Vector3.h
  /opt/ros/noetic/include/ros/advertise_options.h
  /opt/ros/noetic/include/ros/advertise_service_options.h
  /opt/ros/noetic/include/ros/assert.h

@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstring>
+#include <cmath>
 #include <mutex>
 #include <algorithm>
 
@@ -41,6 +42,8 @@ CanBridgeNode::CanBridgeNode()
 
     // ---- 下行订阅器 ----
     ctrlSub_          = nh_.subscribe("ctrl_cmd", 10, &CanBridgeNode::onCtrlCmd, this);
+    cmdVelHighfreqSub_ = nh_.subscribe("/cmd_vel_highfreq", 10,
+        &CanBridgeNode::onCmdVelHighfreq, this);
     taskSub_          = nh_.subscribe("task_cmd", 10, &CanBridgeNode::onTaskCmd, this);
     batteryLevelSub_  = nh_.subscribe("battery_level_down", 10, &CanBridgeNode::onBatteryLevelDown, this);
     taskCtrlSub_      = nh_.subscribe("task_ctrl", 10, &CanBridgeNode::onTaskCtrl, this);
@@ -66,6 +69,12 @@ CanBridgeNode::CanBridgeNode()
         &CanBridgeNode::sendControlFrame, this);
     motionSendTimer_ = nh_.createTimer(ros::Duration(0.01),  // 10ms = 0x201 周期
         &CanBridgeNode::sendMotionFrame, this);
+
+    // Do not inherit the protocol struct's standalone default (1 m/s) when
+    // the bridge starts before the first joystick/Twist message arrives.
+    currentMotionCmd_.linearSpeed = 0;
+    currentMotionCmd_.angularSpeed = 0;
+    currentCtrlCmd_.driveEnable = false;
 
     running_ = true;
     lastMotionTime_ = ros::Time::now();
@@ -490,6 +499,34 @@ void CanBridgeNode::checkVcuTimeout(const ros::TimerEvent&) {
 // ============================================================
 // 下行: ROS Topic → CAN
 // ============================================================
+
+void CanBridgeNode::onCmdVelHighfreq(const geometry_msgs::Twist::ConstPtr& msg) {
+    // MPlanTrack/vel_converter publishes physical SI units. The CAN protocol
+    // stores both speeds as signed values in milli-units.
+    if (!std::isfinite(msg->linear.x) || !std::isfinite(msg->angular.z)) {
+        ROS_WARN_THROTTLE(1.0, "[can_bridge] Ignoring non-finite /cmd_vel_highfreq");
+        return;
+    }
+
+    constexpr double kSpeedScale = 1000.0;
+    constexpr double kInt16Min = -32768.0;
+    constexpr double kInt16Max = 32767.0;
+    const auto toRaw = [&](double value) -> int16_t {
+        const double scaled = std::max(kInt16Min,
+                                       std::min(kInt16Max, value * kSpeedScale));
+        return static_cast<int16_t>(std::lround(scaled));
+    };
+
+    const int16_t linear = toRaw(msg->linear.x);
+    const int16_t angular = toRaw(msg->angular.z);
+
+    std::lock_guard<std::mutex> lock(cmdMutex_);
+    currentMotionCmd_.linearSpeed = linear;
+    currentMotionCmd_.angularSpeed = angular;
+    // Keyboard control has no separate drive-enable topic. Tie the enable bit
+    // to whether a non-zero velocity is being commanded.
+    currentCtrlCmd_.driveEnable = (linear != 0 || angular != 0);
+}
 
 void CanBridgeNode::onCtrlCmd(const std_msgs::String::ConstPtr& msg) {
     try {

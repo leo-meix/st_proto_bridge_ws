@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <geometry_msgs/Twist.h>
 #include <nlohmann/json.hpp>
 
 #include "st_proto_bridge/can_types.h"
@@ -73,6 +74,7 @@ private:
     // 下行: ROS Topic → CAN
     // ============================================================
     void onCtrlCmd(const std_msgs::String::ConstPtr& msg);
+    void onCmdVelHighfreq(const geometry_msgs::Twist::ConstPtr& msg);
     void onTaskCmd(const std_msgs::String::ConstPtr& msg);
     void onBatteryLevelDown(const std_msgs::String::ConstPtr& msg);
     void onTaskCtrl(const std_msgs::String::ConstPtr& msg);
@@ -141,6 +143,7 @@ private:
 
     // ---- 下行订阅器 ----
     ros::Subscriber ctrlSub_;
+    ros::Subscriber cmdVelHighfreqSub_;
     ros::Subscriber taskSub_;
     ros::Subscriber batteryLevelSub_;
     ros::Subscriber taskCtrlSub_;
