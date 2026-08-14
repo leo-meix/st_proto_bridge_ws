@@ -74,7 +74,7 @@ CanBridgeNode::CanBridgeNode()
     // the bridge starts before the first joystick/Twist message arrives.
     currentMotionCmd_.linearSpeed = 0;
     currentMotionCmd_.angularSpeed = 0;
-    currentCtrlCmd_.driveEnable = false;
+    currentCtrlCmd_.driveEnable = true;
 
     running_ = true;
     lastMotionTime_ = ros::Time::now();
@@ -523,9 +523,9 @@ void CanBridgeNode::onCmdVelHighfreq(const geometry_msgs::Twist::ConstPtr& msg) 
     std::lock_guard<std::mutex> lock(cmdMutex_);
     currentMotionCmd_.linearSpeed = linear;
     currentMotionCmd_.angularSpeed = angular;
-    // Keyboard control has no separate drive-enable topic. Tie the enable bit
-    // to whether a non-zero velocity is being commanded.
-    currentCtrlCmd_.driveEnable = (linear != 0 || angular != 0);
+    // Keyboard control has no separate drive-enable topic. Keep driving
+    // enabled even for a zero-speed command so the VCU enable bit stays set.
+    currentCtrlCmd_.driveEnable = true;
 }
 
 void CanBridgeNode::onCtrlCmd(const std_msgs::String::ConstPtr& msg) {

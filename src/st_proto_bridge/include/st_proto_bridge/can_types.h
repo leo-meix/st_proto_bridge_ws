@@ -139,14 +139,14 @@ struct IpcControlCmd {
     bool     gunOut         = false;  // bit1: 拔枪使能
     uint8_t  lightCtrl      = 0;      // bit2-3: 0=关闭,1=红(喇叭),2=绿,3=黄
     bool     emergencyStop  = false;  // bit4: 急停使能
-    bool     driveEnable    = false;  // bit5: 驾驶使能
+    bool     driveEnable    = true;   // bit5: 驾驶使能，默认使能
     bool     armStart       = false;  // bit6: 机械臂启动(上电)
     bool     armReset       = false;  // bit7: 机械臂复位
 };
 
 /// 0x201: 速度命令 (10ms)
 struct IpcMotionCmd {
-    int16_t linearSpeed   = 1000;    // 物理线速度 ×1000；默认 1 m/s，编码时叠加 -5 偏移
+    int16_t linearSpeed   = 100;    // 物理线速度 ×1000；默认 1 m/s，编码时叠加 -5 偏移
     int16_t angularSpeed  = 0;       // 物理角速度 ×1000；编码时叠加 -5 偏移
     uint8_t heartbeat     = 0;       // 工控机心跳计数
 };
